@@ -1,0 +1,36 @@
+
+.game-container-2 {
+    position: relative;
+    width: 100%;
+    padding-top: 50%; /* 50% height of the width for a 2:1 aspect ratio */
+}
+
+.grid-container-2 {
+    top: 0;
+    left: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 columns of equal width */
+    grid-template-rows: repeat(4, 1fr);   /* 4 rows of equal height */
+    background-color: #2196F3;
+    padding: 10px;
+    min-width: 1000px; /* minimum width */
+    width: 50%; /* width, % of viewport width */
+    height: 50%;
+    /*width: 0vh; /* width, % of viewport height */
+    /*padding-top: 100%; /* 1:1 Aspect Ratio (100% height of the width) */
+    height:auto;
+    position: absolute;
+}
+
+.cell-2 {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  /*
+  padding: 20px;
+  */
+  font-size: 5%;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  /*position: relative;*/
+}
