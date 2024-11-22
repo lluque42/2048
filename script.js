@@ -1,8 +1,9 @@
 const conf = {
-    rows:4,
-    cols:4,
+    rows:5,
+    cols:5,
     max_start_val:4,
     start_tiles_number:2,
+    next_tiles_number:4,
     allow_chain_reaction:0,
 }
 
@@ -16,7 +17,8 @@ const cell = {
 // so it should be passed by reference
 //let gridMatrix = [ [-1,-1,-1,-1], [-1,-1,-1,-1], [-1,-1,-1,-1], [-1,-1,-1,-1] ];
 let gridMatrix = [[]];
-console.log("typeof gridMatrix: " + typeof gridMatrix);
+
+let gameOver = false;
 
 // NOTICE THE USE OF ANONYMOUS FUNCTIONS here:
 //
@@ -47,120 +49,103 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-
-function handleKeyPress(event) {
-    switch (event.key) {
-        case 'ArrowUp':
-            arrowUp();       
-            break;
-        case 'ArrowDown':
-            arrowDown();
-            break;
-        case 'ArrowLeft':
-            arrowLeft();
-            break;
-        case 'ArrowRight':
-            arrowRight();
-            break;
-        default:
-            break;
-    }
-}
-
-function moveDown(){
-    for (let i = conf.rows - 1; i >= 0; i--) {
-        for (let j = 0; j < conf.cols; j++) {
-            if (gridMatrix[i][j] !== 0) {
-                let k = i;
-                while (k < conf.rows - 1 && gridMatrix[k + 1][j] === 0) {
-                    gridMatrix[k + 1][j] = gridMatrix[k][j];
-                    gridMatrix[k][j] = 0;
-                    k++;
-                }
-            }
-        }
-    }
-}
-
-function arrowDown(){
-    console.log('Down arrow pressed');
-    moveDown();
-    renderGameBoard();
-    checkMerge("down");
-    moveDown();
-}
-
-function moveUp(){
+function gameBoardFull(){
     for (let i = 0; i < conf.rows; i++) {
         for (let j = 0; j < conf.cols; j++) {
-            if (gridMatrix[i][j] !== 0) {
-                let k = i;
-                while (k > 0 && gridMatrix[k - 1][j] === 0) {
-                    gridMatrix[k - 1][j] = gridMatrix[k][j];
-                    gridMatrix[k][j] = 0;
-                    k--;
-                }
+            if (gridMatrix[i][j] === 0) {
+                return false;
             }
         }
     }
+    return true;
+};
+
+
+
+
+function addToScore(value){
+    let score = document.getElementById('score');
+    score.textContent = parseInt(score.textContent) + value;
 }
 
-function arrowUp(){
-    console.log('Up arrow pressed');
-    moveUp();
-    renderGameBoard();
-    checkMerge("up");
-    moveUp();
+function resetScore(){
+    let score = document.getElementById('score');
+    score.textContent = 0;
 }
 
-function moveLeft(){
-    for (let i = 0; i < conf.rows; i++) {
-        for (let j = 0; j < conf.cols; j++) {
-            if (gridMatrix[i][j] !== 0) {
-                let k = j;
-                while (k > 0 && gridMatrix[i][k - 1] === 0) {
-                    gridMatrix[i][k - 1] = gridMatrix[i][k];
-                    gridMatrix[i][k] = 0;
-                    k--;
-                }
-            }
-        }
-    }
+
+
+// TODO:
+// * I think I saw a bug regarding the merging of same value consecutive tiles
+//   In that case the merging tiles SHOULD BE the farther in the movement direction
+//   check if every for loop in merge iterates in the right direction.
+// * Also, I think I saw a merge chain reaction bug. Some flag should be set to
+//  avoid multiple merges in the same move. (maybe a parallel matrix to store the flags?)
+// DONE:
+// * Update score
+// * Game over should:
+//     * Ignore any key press
+//     * Gray out the board
+// * ERROR: move or no move merge may happen
+
+
+
+function setupGridContainer() {
+    const gridContainer = document.getElementById('gameBoard');
+    gridContainer.style.gridTemplateColumns = `repeat(${conf.cols}, 1fr)`;
+    gridContainer.style.gridTemplateRows = `repeat(${conf.rows}, 1fr)`;
 }
 
-function arrowLeft(){
-    console.log('Left arrow pressed');
-    moveLeft();
-    renderGameBoard();
-    checkMerge("left");
-    moveLeft();
-}
 
-function moveRight(){
+
+
+function checkMerge(direction){
+    mergesHappened = false;
     for (let i = 0; i < conf.rows; i++) {
         for (let j = conf.cols - 1; j >= 0; j--) {
             if (gridMatrix[i][j] !== 0) {
-                let k = j;
-                while (k < conf.cols - 1 && gridMatrix[i][k + 1] === 0) {
-                    gridMatrix[i][k + 1] = gridMatrix[i][k];
-                    gridMatrix[i][k] = 0;
-                    k++;
+                if (direction === "right"){
+                    if ((j + 1) < conf.cols && gridMatrix[i][j] === gridMatrix[i][j + 1]) {
+                        gridMatrix[i][j + 1] *= 2;
+                        gridMatrix[i][j] = 0;
+                        mergesHappened = true;
+                        addToScore(gridMatrix[i][j + 1]);
+                    }
+                }
+                else if (direction === "left"){
+                    if ((j - 1) >= 0 && gridMatrix[i][j] === gridMatrix[i][j - 1]) {
+                        gridMatrix[i][j - 1] *= 2;
+                        gridMatrix[i][j] = 0;
+                        mergesHappened = true;
+                        addToScore(gridMatrix[i][j - 1]);
+                    }
+                }
+                else if (direction === "up"){
+                    if ((i - 1) >= 0 && gridMatrix[i][j] === gridMatrix[i - 1][j]) {
+                        gridMatrix[i - 1][j] *= 2;
+                        gridMatrix[i][j] = 0;
+                        mergesHappened = true;
+                        addToScore(gridMatrix[i - 1][j]);
+                    }
+                }
+                else if (direction === "down"){
+                    if ((i + 1) < conf.rows && gridMatrix[i][j] === gridMatrix[i + 1][j]) {
+                        gridMatrix[i + 1][j] *= 2;
+                        gridMatrix[i][j] = 0;
+                        mergesHappened = true;
+                        addToScore(gridMatrix[i + 1][j]);
+                    }
                 }
             }
         }
     }
+    return mergesHappened;
 }
-
-function arrowRight(){
-    console.log('Right arrow pressed');
-    moveRight()
-    renderGameBoard();
-    checkMerge("right");
-    moveRight();
-}   
 
 function restartGame() {
     // Initialize the game board
+    gameOver = false;
+    resetScore();
     initBoardGame();
     //return gridMatrix;
 }
@@ -179,13 +164,21 @@ function initBoardGame(){
     // and avoid the initialization of gridMatrix outside
     //if (gridMatrix === undefined){
     
-    gridMatrix = [ [0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0] ];
+    //gridMatrix = [ [0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0] ];
     //gridMatrix = [ [-1,-1,-1,-1], [-1,-1,-1,-1], [-1,-1,-1,-1], [-1,-1,-1,-1] ];
+
+    gridMatrix = [];
+    for (let i = 0; i < conf.rows; i++) {
+        gridMatrix[i] = [];
+        for (let j = 0; j < conf.cols; j++) {
+            gridMatrix[i][j] = 0;
+        }
+    }
 
     const gameBoard = document.getElementById('gameBoard');
 
     console.log("original grid Matrix: " + JSON.parse(JSON.stringify(gridMatrix)));
-    spawnTilesIn(2);
+    spawnTilesIn(conf.start_tiles_number);
 
     console.log("initialized grid Matrix: " + JSON.parse(JSON.stringify(gridMatrix))); // Deep copy of gridMatrix
     //gameBoard.innerHTML = JSON.parse(JSON.stringify(gridMatrix));
@@ -204,51 +197,8 @@ function initBoardGame(){
     //return gridMatrix;
 }
 
-
-function getRandomCoordinates(){
-    let row = Math.floor(Math.random() * conf.rows);
-    let col = Math.floor(Math.random() * conf.cols);
-    return {row, col};
-}
-
-function getRandomTileValue(){
-    return Math.random() < 0.5 ? 2 : 4;
-}
-
-function gameBoardFull(){
-    for (let i = 0; i < conf.rows; i++) {
-        for (let j = 0; j < conf.cols; j++) {
-            if (gridMatrix[i][j] === -1) {
-                return false;
-            }
-        }
-    }
-    return true;
-};
-
-function spawnTilesIn(tilesNumber) {
-    //if (gameBoardFull())
-      //  return false;
-    for (let i = 0; i < tilesNumber; i++) {
-        console.log(`i = ${i}`);
-        let { row, col } = getRandomCoordinates();
-        //console.log(`row = ${row}`, `col = ${col}`, `value = ${value}`);
-        console.log(`row = ${row}`, `col = ${col}`);
-        console.log(JSON.parse(JSON.stringify(gridMatrix)));
-        while (gridMatrix[row][col] !== 0) {
-            ({ row, col } = getRandomCoordinates());
-        }
-        let value = getRandomTileValue();
-        console.log(`row = ${row}`, `col = ${col}`, `value = ${value}`);
-        gridMatrix[row][col] = value;
-    }
-    return true;
-    //return {row, col, value};   // returning an object from thin air
-
-    //return gridMatrix;
-}
-
 function renderGameBoard(){
+    setupGridContainer();
     const gameBoard = document.getElementById('gameBoard');
     gameBoard.innerHTML = '';
     while (gameBoard.firstChild) {
@@ -273,21 +223,3 @@ function renderGameBoard(){
         }
     }
 };
-
-/*
-function initCells(){
-    const gameBoard = document.getElementById('gameBoard');
-    for (let i = 0; i < conf.rows; i++) {
-        for (let j = 0; j < conf.cols; j++) {
-            
-            //cells[i][j] = {...cell}
-            const currentCell = document.createElement('div');
-            currentCell.textContent = `row ${i} col ${j}`;
-            currentCell.classList.add('cell');
-            //currentCell.innerHTML = `row ${i} col ${j}`;
-            gameBoard.appendChild(currentCell);
-        }
-    }
-}
-*/
-
