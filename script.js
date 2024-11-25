@@ -1,9 +1,9 @@
 const conf = {
-    rows:5,
-    cols:5,
+    rows:4,
+    cols:4,
     max_start_val:4,
     start_tiles_number:2,
-    next_tiles_number:4,
+    next_tiles_number:1,
     allow_chain_reaction:0,
 }
 
@@ -17,6 +17,8 @@ const cell = {
 // so it should be passed by reference
 //let gridMatrix = [ [-1,-1,-1,-1], [-1,-1,-1,-1], [-1,-1,-1,-1], [-1,-1,-1,-1] ];
 let gridMatrix = [[]];
+
+let mergeableMatrix = [[]];
 
 let gameOver = false;
 
@@ -76,12 +78,14 @@ function resetScore(){
 
 
 // TODO:
+// * Change the color of the tile according to its value
+
+// DONE:
 // * I think I saw a bug regarding the merging of same value consecutive tiles
 //   In that case the merging tiles SHOULD BE the farther in the movement direction
 //   check if every for loop in merge iterates in the right direction.
 // * Also, I think I saw a merge chain reaction bug. Some flag should be set to
 //  avoid multiple merges in the same move. (maybe a parallel matrix to store the flags?)
-// DONE:
 // * Update score
 // * Game over should:
 //     * Ignore any key press
@@ -104,38 +108,61 @@ function checkMerge(direction){
     for (let i = 0; i < conf.rows; i++) {
         for (let j = conf.cols - 1; j >= 0; j--) {
             if (gridMatrix[i][j] !== 0) {
-                if (direction === "right"){
+                if (direction === "right"){ // OK More than one same value tiles merges
+                                            //as expected in this direction
                     if ((j + 1) < conf.cols && gridMatrix[i][j] === gridMatrix[i][j + 1]) {
                         gridMatrix[i][j + 1] *= 2;
                         gridMatrix[i][j] = 0;
+                        mergeableMatrix[i][j + 1] = 0;
                         mergesHappened = true;
                         addToScore(gridMatrix[i][j + 1]);
                     }
                 }
-                else if (direction === "left"){
-                    if ((j - 1) >= 0 && gridMatrix[i][j] === gridMatrix[i][j - 1]) {
-                        gridMatrix[i][j - 1] *= 2;
-                        gridMatrix[i][j] = 0;
-                        mergesHappened = true;
-                        addToScore(gridMatrix[i][j - 1]);
-                    }
-                }
-                else if (direction === "up"){
+                else if (direction === "up"){   // OK More than one same value tiles merges
+                                                //as expected in this direction
                     if ((i - 1) >= 0 && gridMatrix[i][j] === gridMatrix[i - 1][j]) {
                         gridMatrix[i - 1][j] *= 2;
                         gridMatrix[i][j] = 0;
+                        mergeableMatrix[i - 1][j] = 0;
                         mergesHappened = true;
                         addToScore(gridMatrix[i - 1][j]);
                     }
                 }
-                else if (direction === "down"){
-                    if ((i + 1) < conf.rows && gridMatrix[i][j] === gridMatrix[i + 1][j]) {
-                        gridMatrix[i + 1][j] *= 2;
+
+            }
+        }
+    }
+    // Inverted iteration direction to comply with the desired behavior
+    // when more than one same value tiles in the movement direction merges:
+    //      The farther tiles in the movement direction are the ones that should merge
+    for (let i = conf.rows - 1; i >= 0; i--) {
+        for (let j = 0; j < conf.cols; j++) {
+            if (gridMatrix[i][j] !== 0) {
+                if (direction === "left"){  // OK More than one same value tiles merges
+                                            //as expected in this direction
+                    if ((j - 1) >= 0 && gridMatrix[i][j] === gridMatrix[i][j - 1]) {
+                        gridMatrix[i][j - 1] *= 2;
                         gridMatrix[i][j] = 0;
+                        mergeableMatrix[i][j - 1] = 0;
+                        mergesHappened = true;
+                        addToScore(gridMatrix[i][j - 1]);
+                    }
+                }
+                else if (direction === "down"){ // OK More than one same value tiles merges
+                                                //as expected in this direction
+                    if ((i + 1) < conf.rows && gridMatrix[i][j] === gridMatrix[i + 1][j]) {
+                        gridMatrix[i + 1][j] *= 2; 
+                        gridMatrix[i][j] = 0;
+                        mergeableMatrix[i + 1][j] = 0;
                         mergesHappened = true;
                         addToScore(gridMatrix[i + 1][j]);
                     }
                 }
+
+
+
+
+
             }
         }
     }
@@ -175,6 +202,14 @@ function initBoardGame(){
         }
     }
 
+    mergeableMatrix = [];
+    for (let i = 0; i < conf.rows; i++) {
+        mergeableMatrix[i] = [];
+        for (let j = 0; j < conf.cols; j++) {
+            mergeableMatrix[i][j] = 1;
+        }
+    }
+
     const gameBoard = document.getElementById('gameBoard');
 
     console.log("original grid Matrix: " + JSON.parse(JSON.stringify(gridMatrix)));
@@ -207,6 +242,8 @@ function renderGameBoard(){
     for (let row = 0; row < conf.rows; row++) {
         for (let col = 0; col < conf.cols; col++) {
             const cell = document.createElement('div');
+            cell.id = `cell-${row}-${col}`;
+//            cell.setAttribute('mergeable', true);
             cell.classList.add('cell');
             if (gridMatrix[row][col] !== 0)
             {
