@@ -72,11 +72,13 @@ function addToScore(value){
 
 
 // TODO:
-// * Change the color of the tile according to its value
+
 // * Insert the chain reaction option.
-// * Initialization .js file.
+
 
 // DONE:
+// * Change the color of the tile according to its value
+// * Initialization .js file.
 // * I think I saw a bug regarding the merging of same value consecutive tiles
 //   In that case the merging tiles SHOULD BE the farther in the movement direction
 //   check if every for loop in merge iterates in the right direction.
@@ -187,7 +189,39 @@ function renderGameBoard(){
                 cell.classList.add('empty-cell');
             }
             cell.textContent = gridMatrix[row][col];
+            cell.style.backgroundColor = generateColor(gridMatrix[row][col]);
             gameBoard.appendChild(cell);
         }
     }
-};
+}
+
+function generateColor(value){
+    switch (value){
+        case 0:
+            return "#FFFFFF";
+        case 2:
+            return "#FF0000";
+        case 4:
+            return "#00FF00";
+        case 8:
+            return "#0000FF";
+        case 16:
+            return "#FFFF00";
+        case 32:
+            return "#FF00FF";
+        case 64:
+            return "#00FFFF";
+        case 128:
+            return "#FF8000";
+        case 256:
+            return "#FF0080";
+        case 512:
+            return "#80FF00";
+        case 1024:
+            return "#0080FF";
+        case 2048:
+            return "#8000FF";
+        default:
+            return "#000000";
+    }
+}
