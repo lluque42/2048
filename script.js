@@ -62,23 +62,19 @@ function gameBoardFull(){
     return true;
 };
 
-
-
-
 function addToScore(value){
     let score = document.getElementById('score');
     score.textContent = parseInt(score.textContent) + value;
 }
 
-function resetScore(){
-    let score = document.getElementById('score');
-    score.textContent = 0;
-}
+
 
 
 
 // TODO:
 // * Change the color of the tile according to its value
+// * Insert the chain reaction option.
+// * Initialization .js file.
 
 // DONE:
 // * I think I saw a bug regarding the merging of same value consecutive tiles
@@ -91,15 +87,6 @@ function resetScore(){
 //     * Ignore any key press
 //     * Gray out the board
 // * ERROR: move or no move merge may happen
-
-
-
-function setupGridContainer() {
-    const gridContainer = document.getElementById('gameBoard');
-    gridContainer.style.gridTemplateColumns = `repeat(${conf.cols}, 1fr)`;
-    gridContainer.style.gridTemplateRows = `repeat(${conf.rows}, 1fr)`;
-}
-
 
 
 
@@ -177,61 +164,6 @@ function restartGame() {
     //return gridMatrix;
 }
 
-function initBoardGame(){
-    // This will not work as expected, since console gets the reference to the object
-    // and will NOT print the object at the time of the console.log,
-    // but the object at its last (?) state
-    //      console.log (gridMatrix);
-
-    // This will work as expected, since JSON.stringify creates a new object
-    // and console gets a dereferenced object
-    //      console.log(JSON.parse(JSON.stringify(gridMatrix))); // Deep copy of gridMatrix
-    
-    // May be this should be undefined instead of null
-    // and avoid the initialization of gridMatrix outside
-    //if (gridMatrix === undefined){
-    
-    //gridMatrix = [ [0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0] ];
-    //gridMatrix = [ [-1,-1,-1,-1], [-1,-1,-1,-1], [-1,-1,-1,-1], [-1,-1,-1,-1] ];
-
-    gridMatrix = [];
-    for (let i = 0; i < conf.rows; i++) {
-        gridMatrix[i] = [];
-        for (let j = 0; j < conf.cols; j++) {
-            gridMatrix[i][j] = 0;
-        }
-    }
-
-    mergeableMatrix = [];
-    for (let i = 0; i < conf.rows; i++) {
-        mergeableMatrix[i] = [];
-        for (let j = 0; j < conf.cols; j++) {
-            mergeableMatrix[i][j] = 1;
-        }
-    }
-
-    const gameBoard = document.getElementById('gameBoard');
-
-    console.log("original grid Matrix: " + JSON.parse(JSON.stringify(gridMatrix)));
-    spawnTilesIn(conf.start_tiles_number);
-
-    console.log("initialized grid Matrix: " + JSON.parse(JSON.stringify(gridMatrix))); // Deep copy of gridMatrix
-    //gameBoard.innerHTML = JSON.parse(JSON.stringify(gridMatrix));
-    renderGameBoard();
-    /*
-    gameBoard.innerHTML = '';
-    for (let row = 0; row < conf.rows; row++) {
-        for (let col = 0; col < conf.cols; col++) {
-            const cell = document.createElement('div');
-            cell.classList.add('cell');
-            cell.textContent = gridMatrix[row][col] !== -1 ? gridMatrix[row][col] : '';
-            gameBoard.appendChild(cell);
-        }
-    }
-    */
-    //return gridMatrix;
-}
-
 function renderGameBoard(){
     setupGridContainer();
     const gameBoard = document.getElementById('gameBoard');
@@ -243,7 +175,6 @@ function renderGameBoard(){
         for (let col = 0; col < conf.cols; col++) {
             const cell = document.createElement('div');
             cell.id = `cell-${row}-${col}`;
-//            cell.setAttribute('mergeable', true);
             cell.classList.add('cell');
             if (gridMatrix[row][col] !== 0)
             {
