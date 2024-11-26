@@ -1,0 +1,186 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    width: 100vw;
+    background-color: #f0f0f0;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    background-color: wheat;
+    /*
+    
+    
+    
+    */
+}
+
+@media (max-width: 1920px) {
+
+  h1 {
+    font-size: 4vw;
+  }
+
+  .game-container {
+
+    
+    justify-content: center;
+    align-items: center;
+    margin-left: 35vw;
+    width: 75vw;
+    height: 100vh;
+
+    
+
+    
+    /*
+
+    padding-right: 10%;
+    padding-left: 10%;
+    position: relative;
+    
+    
+    
+    */
+  }
+
+  .header-container {
+    display: flex;  /*allows for the children to be displayed in a row*/
+    height: 5vh;
+    font-size: 1.5vw;
+  }
+
+  .score-container {
+    height: 4vh;
+    width: 11vw;
+    font-size: 1.5vw;
+  }
+
+  .controls-container {
+    height: 4vh;
+    width: 11vw;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+  }
+
+  #restart-btn {
+    height: 4.5vh;
+    font-size: 1.5vw;
+    border-radius: 0.5vw;
+    width: 7vw;
+    background-color: rgb(190, 172, 139);
+    
+  }
+
+
+  .bottom-container {
+    padding-top: 1%;
+    padding-bottom: 1%;
+    height: 5vh;
+    font-size: 1vw;
+  }
+
+
+
+  .grid-container {
+
+      display: grid;
+      grid-template-columns: repeat(4, 1fr); /* 4 columns of equal width */
+      grid-template-rows: repeat(4, 1fr);   /* 4 rows of equal height */
+      width: 22vw;
+      height: 22vw
+      
+      /*
+      top: 0;
+      left: 0;
+      background-color: #2196F3;
+      padding: 10px;
+      min-width: 1000px;
+      width: 50%;
+      height: 50%;
+      width: 0vh; 
+      padding-top: 100%;
+      height:auto;
+      position: absolute;
+      */
+  }
+
+  .cell {
+    width: 5vw;
+    height: 5vw;
+    border-radius: 1vw;
+
+    border: 1px solid #000000;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2vw;
+    /*
+      text-align: center;
+    text-justify: center;
+    padding-top: 10%;
+    justify-content: center;
+    align-items: center;
+      display: flex;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    */
+  }
+
+  .tile {
+    color: #000000;;
+    /*background-color: rgb(181, 125, 125);*/
+    }
+
+      
+  .horizontally-merged-tile {
+    width: 7vw;
+    transition:width .10s ease;
+  }
+
+  .horizontally-merged-tile-final {
+    width: 5vw;
+  }
+
+  .vertically-merged-tile {
+    height: 7vw;
+    transition:height .10s ease;
+  }
+
+  .vertically-merged-tile-final {
+    height: 5vw;
+  }
+
+  .empty-cell {
+    color: white;
+    border-style: dashed;
+    background-color: white;
+  }
+
+  .game-over {
+    color: darkgray;
+    border-color: lightgray;
+  }
+}
+
+/*
+.palette-for-tiles {
+  background-color: #FFFFFF;
+  background-color: #a57a7a;
+  background-color:#60d560;
+  background-color:#5858e5;
+  background-color:#ffff71;
+  background-color:#ea7eea;
+  background-color:#a4ffff;
+  background-color:#fdab5a;
+  background-color:#f1439a;
+  background-color:#7ad223;
+  background-color:#0080FF;
+  background-color:#7a5e96;
+  background-color:#000000;
+}
+*/
