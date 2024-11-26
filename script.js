@@ -246,19 +246,22 @@ function renderGameBoard(){
 
             // If the cell was just merged, add the class to animate it
             if (mergeableMatrix[row][col] === 0){
+                cell.classList.remove('tile');/////////////////////////////////////////////////////////////////////////////////////
                 console.log(`The key pressed was ${keyPressed}`);
                 if (keyPressed === "ArrowUp" || keyPressed === "ArrowDown"){
+                    console.log(`Vertical merge`);
                     cell.classList.add('vertically-merged-tile');
                     // Trigger the transition after the browser has rendered the initial state
                     requestAnimationFrame(() => {
-                        cell.classList.add("final");
+                        cell.classList.add("vertically-merged-tile-final");
                     });
                 }
-                if (keyPressed === "ArrowLeft" || keyPressed === "ArrowRight"){
+                else if (keyPressed === "ArrowLeft" || keyPressed === "ArrowRight"){
+                    console.log(`Horizontal merge`);
                     cell.classList.add('horizontally-merged-tile');
                     // Trigger the transition after the browser has rendered the initial state
                     requestAnimationFrame(() => {
-                        cell.classList.add("final");
+                        cell.classList.add("horizontally-merged-tile-final");
                     });
                 }
             }

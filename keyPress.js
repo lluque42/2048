@@ -24,17 +24,17 @@ function handleKeyPress(event) {
 
 function arrowUp(){
     if (moveUp()){
-        renderGameBoard();
+//        renderGameBoard();
         if (doMerge("up")){
             moveUp();
-            renderGameBoard();
+//            renderGameBoard();
         }
         spawnTilesIn(conf.next_tiles_number);
         renderGameBoard();
     } else {
         if (doMerge("up")){
             moveUp();
-            renderGameBoard();
+//            renderGameBoard();
         }
         spawnTilesIn(conf.next_tiles_number);
         renderGameBoard();
@@ -43,17 +43,17 @@ function arrowUp(){
 
 function arrowDown(){
     if (moveDown()){
-        renderGameBoard();
+//        renderGameBoard();
         if (doMerge("down")){
             moveDown();
-            renderGameBoard();
+//            renderGameBoard();
         }
         spawnTilesIn(conf.next_tiles_number);
         renderGameBoard();
     } else {
         if (doMerge("down")){
             moveDown();
-            renderGameBoard();
+//            renderGameBoard();
         }
         spawnTilesIn(conf.next_tiles_number);
         renderGameBoard();
@@ -62,17 +62,17 @@ function arrowDown(){
 
 function arrowLeft(){
     if (moveLeft()){
-        renderGameBoard();
+//        renderGameBoard();
         if (doMerge("left")){
             moveLeft();
-            renderGameBoard();
+  //          renderGameBoard();
         }
         spawnTilesIn(conf.next_tiles_number);
         renderGameBoard();
     } else {
         if (doMerge("left")){
             moveLeft();
-            renderGameBoard();
+//            renderGameBoard();
         }
         spawnTilesIn(conf.next_tiles_number);
         renderGameBoard();
@@ -81,17 +81,17 @@ function arrowLeft(){
 
 function arrowRight(){
     if (moveRight()){
-        renderGameBoard();
+ //       renderGameBoard();
         if (doMerge("right")){
             moveRight();
-            renderGameBoard();
+ //           renderGameBoard();
         }
         spawnTilesIn(conf.next_tiles_number);
         renderGameBoard();
     } else {
         if (doMerge("right")){
             moveRight();
-            renderGameBoard();
+//            renderGameBoard();
         }
         spawnTilesIn(conf.next_tiles_number);
         renderGameBoard();
