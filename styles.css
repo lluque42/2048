@@ -131,10 +131,27 @@ body {
     */
   }
   
+  .horizontally-merged-tile {
+    width: 10vw;
+    transition:width .15s ease;
+  }
+
+  .horizontally-merged-tile.final {
+    width: 5vw;
+  }
+
+  .vertically-merged-tile {
+    height: 10vh;
+    transition:height .15s ease;
+  }
+
+  .vertically-merged-tile.final {
+    height: 5vh;
+  }
+
   .tile {
     color: #000000;;
     background-color: rgb(181, 125, 125);
-    transition:display 20s ease;
     }
 
   .empty-cell {

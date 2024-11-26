@@ -22,6 +22,8 @@ let mergeableMatrix = [[]];
 
 let gameOver = false;
 
+let keyPressed = "none";
+
 // NOTICE THE USE OF ANONYMOUS FUNCTIONS here:
 //
 // This intuitive way is WRONG:
@@ -51,23 +53,20 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-function gameBoardFull(){
-    for (let i = 0; i < conf.rows; i++) {
-        for (let j = 0; j < conf.cols; j++) {
-            if (gridMatrix[i][j] === 0) {
-                return false;
-            }
-        }
-    }
-    return true;
-};
+
 
 function addToScore(value){
     let score = document.getElementById('score');
     score.textContent = parseInt(score.textContent) + value;
 }
 
-
+function fillMatrix(matrix, value){
+    for (let i = 0; i < conf.rows; i++) {
+        for (let j = 0; j < conf.cols; j++) {
+            matrix[i][j] = value;
+        }
+    }
+}
 
 
 
@@ -92,8 +91,69 @@ function addToScore(value){
 // * ERROR: move or no move merge may happen
 
 
+function checkGameOver(){
+    if (gameBoardFull() && !(checkMerge("up") || checkMerge("down") || checkMerge("left") || checkMerge("right"))) {
+        alert("Game Over");
+        gameOver = true;
+        const gridContainer = document.getElementById('gameBoard');
+        Array.from(gridContainer.children).forEach(child => {
+            child.classList.add('game-over');
+        });
+    }
+}
+
+function gameBoardFull(){
+    for (let i = 0; i < conf.rows; i++) {
+        for (let j = 0; j < conf.cols; j++) {
+            if (gridMatrix[i][j] === 0) {
+                return false;
+            }
+        }
+    }
+    console.log("Game board is full");
+    return true;
+};
 
 function checkMerge(direction){
+    for (let i = 0; i < conf.rows; i++) {
+        for (let j = conf.cols - 1; j >= 0; j--) {
+            if (gridMatrix[i][j] !== 0) {
+                if (direction === "right"){
+                    if ((j + 1) < conf.cols && gridMatrix[i][j] === gridMatrix[i][j + 1]) {
+                        console.log(`Merges possible!`);
+                        return true;
+                    }
+                }
+                else if (direction === "up"){
+                    if ((i - 1) >= 0 && gridMatrix[i][j] === gridMatrix[i - 1][j]) {
+                        console.log(`Merges possible!`);
+                        return true;
+                    }
+                }
+                else if (direction === "left"){
+                    if ((j - 1) >= 0 && gridMatrix[i][j] === gridMatrix[i][j - 1]) {
+                        console.log(`Merges possible!`);
+                        return true;
+                    }
+                }
+                else if (direction === "down"){
+                    if ((i + 1) < conf.rows && gridMatrix[i][j] === gridMatrix[i + 1][j]) {
+                        console.log(`Merges possible!`);
+                        return true;
+                    }
+                }
+
+            }
+        }
+    }
+    console.log(`No merges possible!`);
+    return false;
+}
+
+
+
+
+function doMerge(direction){
     mergesHappened = false;
     for (let i = 0; i < conf.rows; i++) {
         for (let j = conf.cols - 1; j >= 0; j--) {
@@ -178,44 +238,34 @@ function renderGameBoard(){
             cell.id = `cell-${row}-${col}`;
             cell.classList.add('cell');
             if (gridMatrix[row][col] !== 0)
-            {
-                //cell.classList.remove('empty-cell');
                 cell.classList.add('tile');
-
-/*
-
-                // TODO merge visual effect...
-
-
-                        document.getElementById(`cell-${i}-${j - 1}`).style.width = "0";
-                        console.log(document.getElementById(`cell-${i}-${j - 1}`).innerHTML);
-                            //not working
-
-
-
-
-
-
-                if (mergeableMatrix[row][col] === 0){
-                    //console.log(`cell-${row}-${col} is merged`);
-                    cell.classList.add('just-merged');
-                }
-
-*/
-
-
-
-            }
             else
-            {
-                //cell.classList.remove('tile');
                 cell.classList.add('empty-cell');
-            }
             cell.textContent = gridMatrix[row][col];
             cell.style.backgroundColor = generateColor(gridMatrix[row][col]);
+
+            // If the cell was just merged, add the class to animate it
+            if (mergeableMatrix[row][col] === 0){
+                console.log(`The key pressed was ${keyPressed}`);
+                if (keyPressed === "ArrowUp" || keyPressed === "ArrowDown"){
+                    cell.classList.add('vertically-merged-tile');
+                    // Trigger the transition after the browser has rendered the initial state
+                    requestAnimationFrame(() => {
+                        cell.classList.add("final");
+                    });
+                }
+                if (keyPressed === "ArrowLeft" || keyPressed === "ArrowRight"){
+                    cell.classList.add('horizontally-merged-tile');
+                    // Trigger the transition after the browser has rendered the initial state
+                    requestAnimationFrame(() => {
+                        cell.classList.add("final");
+                    });
+                }
+            }
             gameBoard.appendChild(cell);
         }
     }
+    fillMatrix(mergeableMatrix, 1);
 }
 
 function generateColor(value){

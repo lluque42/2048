@@ -1,16 +1,9 @@
 function handleKeyPress(event) {
+    checkGameOver();
     if (gameOver) {
         return;
     }
-    if (gameBoardFull() && !checkMerge("up") && !checkMerge("down") && !checkMerge("left") && !checkMerge("right")) {
-        const gridContainer = document.getElementById('gameBoard');
-        Array.from(gridContainer.children).forEach(child => {
-            child.classList.add('game-over');
-        });
-        alert("Game Over");
-        gameOver = true;
-    return;
-    }
+    keyPressed = event.key;
     switch (event.key) {
         case 'ArrowUp':
             arrowUp();       
@@ -32,14 +25,14 @@ function handleKeyPress(event) {
 function arrowUp(){
     if (moveUp()){
         renderGameBoard();
-        if (checkMerge("up")){
+        if (doMerge("up")){
             moveUp();
             renderGameBoard();
         }
         spawnTilesIn(conf.next_tiles_number);
         renderGameBoard();
     } else {
-        if (checkMerge("up")){
+        if (doMerge("up")){
             moveUp();
             renderGameBoard();
         }
@@ -51,14 +44,14 @@ function arrowUp(){
 function arrowDown(){
     if (moveDown()){
         renderGameBoard();
-        if (checkMerge("down")){
+        if (doMerge("down")){
             moveDown();
             renderGameBoard();
         }
         spawnTilesIn(conf.next_tiles_number);
         renderGameBoard();
     } else {
-        if (checkMerge("down")){
+        if (doMerge("down")){
             moveDown();
             renderGameBoard();
         }
@@ -70,14 +63,14 @@ function arrowDown(){
 function arrowLeft(){
     if (moveLeft()){
         renderGameBoard();
-        if (checkMerge("left")){
+        if (doMerge("left")){
             moveLeft();
             renderGameBoard();
         }
         spawnTilesIn(conf.next_tiles_number);
         renderGameBoard();
     } else {
-        if (checkMerge("left")){
+        if (doMerge("left")){
             moveLeft();
             renderGameBoard();
         }
@@ -89,14 +82,14 @@ function arrowLeft(){
 function arrowRight(){
     if (moveRight()){
         renderGameBoard();
-        if (checkMerge("right")){
+        if (doMerge("right")){
             moveRight();
             renderGameBoard();
         }
         spawnTilesIn(conf.next_tiles_number);
         renderGameBoard();
     } else {
-        if (checkMerge("right")){
+        if (doMerge("right")){
             moveRight();
             renderGameBoard();
         }

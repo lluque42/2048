@@ -9,6 +9,9 @@ function getRandomTileValue(){
 }
 
 function spawnTilesIn(tilesNumber) {
+    if (gameBoardFull()) {
+        return false;
+    }
     for (let i = 0; i < tilesNumber; i++) {
         let { row, col } = getRandomCoordinates();
         while (gridMatrix[row][col] !== 0) {
