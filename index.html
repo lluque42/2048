@@ -11,15 +11,13 @@
 <body>
     <div class="game-container">
         <h1>2048</h1>
-        <div class="score-container">
-            <span>Score: <span id="score">0</span></span>
-             <!-- Putting here the onclick=... is not a best practice
-              Instead it's recommended to add an addEventListener in JS
-              to be performed one time when loading the page -->
-            <!--
-            <button id="restart-btn" onclick="initBoardGame(null)">Restart</button>
-            -->
-            <button id="restart-btn">Restart</button>
+        <div class="header-container">
+            <div class="score-container">
+                <span>Score: <span id="score">0</span></span>
+            </div>
+            <div class="controls-container">
+                <button id="restart-btn">Restart</button>
+            </div>
         </div>
         <div class="grid-container" id = "gameBoard">
             <!-- The grid will be filled by JavaScript -->

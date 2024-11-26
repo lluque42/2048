@@ -2,7 +2,7 @@ function handleKeyPress(event) {
     if (gameOver) {
         return;
     }
-    if (gameBoardFull()){
+    if (gameBoardFull() && !checkMerge("up") && !checkMerge("down") && !checkMerge("left") && !checkMerge("right")) {
         const gridContainer = document.getElementById('gameBoard');
         Array.from(gridContainer.children).forEach(child => {
             child.classList.add('game-over');
@@ -30,7 +30,6 @@ function handleKeyPress(event) {
 }
 
 function arrowUp(){
-    console.log('Up arrow pressed');
     if (moveUp()){
         renderGameBoard();
         if (checkMerge("up")){
@@ -50,7 +49,6 @@ function arrowUp(){
 }
 
 function arrowDown(){
-    console.log('Down arrow pressed');
     if (moveDown()){
         renderGameBoard();
         if (checkMerge("down")){
@@ -70,7 +68,6 @@ function arrowDown(){
 }
 
 function arrowLeft(){
-    console.log('Left arrow pressed');
     if (moveLeft()){
         renderGameBoard();
         if (checkMerge("left")){
@@ -90,7 +87,6 @@ function arrowLeft(){
 }
 
 function arrowRight(){
-    console.log('Right arrow pressed');
     if (moveRight()){
         renderGameBoard();
         if (checkMerge("right")){

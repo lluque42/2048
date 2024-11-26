@@ -44,10 +44,10 @@ function initBoardGame(){
 
     const gameBoard = document.getElementById('gameBoard');
 
-    console.log("original grid Matrix: " + JSON.parse(JSON.stringify(gridMatrix)));
+    //console.log("original grid Matrix: " + JSON.parse(JSON.stringify(gridMatrix)));
     spawnTilesIn(conf.start_tiles_number);
 
-    console.log("initialized grid Matrix: " + JSON.parse(JSON.stringify(gridMatrix))); // Deep copy of gridMatrix
+    //console.log("initialized grid Matrix: " + JSON.parse(JSON.stringify(gridMatrix))); // Deep copy of gridMatrix
     //gameBoard.innerHTML = JSON.parse(JSON.stringify(gridMatrix));
     renderGameBoard();
     /*
